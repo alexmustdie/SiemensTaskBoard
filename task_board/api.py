@@ -1,49 +1,12 @@
-import os
-import enum
+from flask import request, jsonify
 
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(os.path.join(os.path.dirname(__file__), 'task-board.db'))
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    tasks = db.relationship('Task', backref='user', lazy=True)
-
-
-class TaskStatus(enum.Enum):
-    TODO = 0
-    IN_PROGRESS = 1
-    ON_REVIEW = 2
-    DONE = 3
-
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String(120), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    status = db.Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.TODO)
-
-
-db.create_all()
-db.session.commit()
+from app import app, db
+from task_board.models import User, TaskStatus, Task
 
 
 @app.errorhandler(Exception)
 def handle_exception(exc):
     return jsonify(error=str(exc))
-
-
-@app.route('/')
-def index():
-    return 'Siemens Task Board'
 
 
 @app.route('/api/users.add', methods=['GET'])
@@ -143,7 +106,3 @@ def set_task_status():
     db.session.commit()
 
     return jsonify(result=True)
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005, debug=True)
