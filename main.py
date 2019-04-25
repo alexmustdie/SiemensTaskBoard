@@ -1,4 +1,4 @@
-from task_board.app import app
+from task_board import app
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5005, debug=False)

@@ -1,6 +1,6 @@
 from flask import request, jsonify
 
-from task_board.app import app, db
+from task_board import app, db
 from task_board.models import User, Task, TaskStatus
 
 
