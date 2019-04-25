@@ -23,3 +23,7 @@ class Task(db.Model):
     description = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     status = db.Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.TODO)
+
+
+db.create_all()
+db.session.commit()
