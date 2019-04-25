@@ -1,6 +1,6 @@
 import enum
 
-from app import db
+from task_board.app import db
 
 
 class User(db.Model):

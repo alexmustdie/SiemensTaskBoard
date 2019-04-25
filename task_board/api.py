@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
-from app import app, db
-from task_board.models import User, TaskStatus, Task
+from task_board.app import app, db
+from task_board.models import User, Task, TaskStatus
 
 
 @app.errorhandler(Exception)
@@ -12,8 +12,8 @@ def handle_exception(exc):
 @app.route('/api/users.add', methods=['GET'])
 def add_user():
 
-    first_name = request.args.get('first_name')
-    last_name = request.args.get('last_name')
+    first_name = request.args['first_name']
+    last_name = request.args['last_name']
 
     user = User(first_name=first_name, last_name=last_name)
 
